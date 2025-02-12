@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Keeper</title>
+  <link rel="stylesheet" href="styles.css">
+  
+</head>
+
+<body style="margin: 0">
+    <h1 class="center">Password Keeper</h1>
+    <form onsubmit="handleSearch(event)">
+        <input type="text" id="searchInput" class="search-bar" placeholder="Search for a password...">
+        <button type="submit" id="searchButton" class="submit-button">Search</button>
+    </form>
+    
+    <div class="form-container">
+  <form onsubmit="handleFormSubmit(event)">
+    <label for="title">Title</label>
+    <input type="text"  name="title" id="title" />
+    <label for="password">Password</label>
+    <input type="password"   name="password" id="password" />
+    
+    <button type="submit" class="submit-button">Submit</button>
+  </form>
+  </div>
+  <ul></ul>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
+<script src="index.js"></script>
+
+</html>
