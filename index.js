@@ -1,23 +1,15 @@
+let userId =null;
 function handleSearch(event) {
     event.preventDefault();
-    const searchButton = document.getElementById('searchButton');
-   const searchInput = document.getElementById('searchInput');
-    //let filter = document.getElementById("filter");
+   const searchQuery = event.target.search.value;
 
-// grab the filter input and listen for the key up event
-
-searchButton.addEventListener('click', function (event) {
-
-
-    const searchQuery = searchInput.value;
-    passwordList.innerHTML = '';
     axios
         .get(
-            "https://crudcrud.com/api/ff64081d82144395bbc6217c84e5bed5/AppointmentData"
+            "https://crudcrud.com/api/c27778a901994b60badb7f05322d12a8/PasswordKeeperData/"
         )
         .then((response) => {
-            //console.log(response);
-            //let result = response.data.includes(textenterd);
+            const userList = document.querySelector("ul");
+            userList.innerHTML="";
             
             const filteredPasswords = response.data.filter(function(item) {
                 return item.title.includes(searchQuery);
@@ -32,8 +24,8 @@ searchButton.addEventListener('click', function (event) {
 
         
 
-    }
-)
+    
+
 
 }
 
@@ -45,27 +37,38 @@ function handleFormSubmit(event) {
         password: event.target.password.value,
        
     };
+
+    if(userId==null){
     axios
         .post(
-            "https://crudcrud.com/api/ff64081d82144395bbc6217c84e5bed5/AppointmentData",
+            "https://crudcrud.com/api/c27778a901994b60badb7f05322d12a8/PasswordKeeperData",
             userDetails
         )
         .then((response) => displayUserOnScreen(response.data))
             
         .catch((error) => console.log(error));
+    }
+    else{
+        axios
+        .put("https://crudcrud.com/api/c27778a901994b60badb7f05322d12a8/PasswordKeeperData/"+userId,userDetails)
+        .then((resolve) => console.log(resolve.data))
+        .catch((err) => console.log(err));
+        userId=null;
+    }
 
     // Clearing the input fields
     document.getElementById("title").value = "";
     document.getElementById("password").value = "";
+
     
 }
 window.addEventListener("DOMContentLoaded", () => {
     axios
         .get(
-            "https://crudcrud.com/api/ff64081d82144395bbc6217c84e5bed5/AppointmentData"
+            "https://crudcrud.com/api/c27778a901994b60badb7f05322d12a8/PasswordKeeperData"
         )
         .then((response) => {
-            //console.log(response);
+            console.log(response);
 
             for(var i=0; i<response.data.length; i++){
                 displayUserOnScreen(response.data[i])
@@ -79,12 +82,8 @@ window.addEventListener("DOMContentLoaded", () => {
     //document.getElementById("password").value = "";
     
 })
-function deleteTodo() {
-    axios
-        .delete("https://crudcrud.com/api/ff64081d82144395bbc6217c84e5bed5/AppointmentData/67ac80c3d5e8e603e8a70785")
-        .then((resolve) => console.log(resolve.data))
-        .catch((err) => console.log(err));
-}
+
+
 function displayUserOnScreen(userDetails) {
     const userItem = document.createElement("li");
     userItem.appendChild(
@@ -106,15 +105,24 @@ function displayUserOnScreen(userDetails) {
 
     deleteBtn.addEventListener("click", function (event) {
         userList.removeChild(event.target.parentElement);
-        localStorage.removeItem(userDetails.password);
+        //localStorage.removeItem(userDetails.password);
+        
+           axios
+                .delete("https://crudcrud.com/api/c27778a901994b60badb7f05322d12a8/PasswordKeeperData/"+userDetails._id)
+                .then((resolve) => console.log(resolve.data))
+                .catch((err) => console.log(err));
     });
 
     editBtn.addEventListener("click", function (event) {
-        userList.removeChild(event.target.parentElement);
-        localStorage.removeItem(userDetails.password);
+        //userList.removeChild(event.target.parentElement);
+        //localStorage.removeItem(userDetails.password);
         document.getElementById("title").value = userDetails.title;
         document.getElementById("password").value = userDetails.password;
+        userId=userDetails._id;
+    
         
+            
+    
     });
     
 }
